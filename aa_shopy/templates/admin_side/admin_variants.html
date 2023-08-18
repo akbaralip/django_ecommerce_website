@@ -1,0 +1,60 @@
+{% extends 'admin_side/base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="col-sm-12">
+    <div class="bg-white rounded h-100 p-4">
+        <h6 class="mb-4">Product Variants List</h6>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Brand</th>
+                    <th scope="col">Model Name</th>
+                    <th scope="col">Stock</th>
+                    <th scope="col">Store Price</th>
+                    <th scope="col">Sale Price</th>
+                    
+                    <th scope="col">Discount Percentage</th>
+                    <th scope="col">Discount Price</th>
+                    <th scope="col">Variant</th>
+                    <th scope="col">Image</th>
+                    <th scope="col">Actions</th>
+   
+                </tr>
+            </thead>
+            <tbody>
+            {% for variant in variants %}
+                {% with random_image=variant.images.first %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ variant.product.name }}</td>
+                        <td>{{ variant.product.brand_name }}</td>
+                        <td>{{ variant.model_name }}</td>
+                        <td>{{ variant.stock }}</td>
+                        <td>{{ variant.store_price }}</td>
+                        <td>{{ variant.sale_price }}</td>
+                        <td>{{ variant.discount }}</td>
+                        <td>{{ variant.discount_price }}</td>
+                        <td>{{ variant.color }}</td>
+                        <td><img src="{{ random_image.image.url }}" alt="" width="30" height="40"></td>
+                        <td>
+                            <a href="{% url 'edit_variant' variant.id  %}" class="btn btn-outline-primary m-1">Edit</a>
+                            {% comment %} {% if variant.is_active %}
+                            <a href="{% url 'disable_variant' variant.id %}" class="btn btn-outline-danger m-1">DISABLE</a>
+                            {% else %}
+                            <a href="{% url 'enable_variant' variant.id %}" class="btn btn-outline-success m-1">ENABLE</a>
+                            {% endif %}  {% endcomment %}
+                        </td>
+                    </tr>
+                {% endwith %}
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{% url 'add_varients' product.id %}" class="btn btn-primary">ADD VARIANT</a>
+
+    </div>
+</div>
+{% endblock %}

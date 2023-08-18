@@ -1,0 +1,128 @@
+{% extends 'admin_side/base.html' %}
+{% load static %}
+{% block body %}
+<div class="container">
+
+{% if error_message %}
+
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+      {{ error_message }}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+{% endif %}
+    
+    <h6 class="my-4">ADD PRODUCT </h6>
+
+    <form method="POST" enctype="multipart/form-data" action="{% url 'add_products' %} ">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="name">Product Name</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="shortdescription">Short description</label>
+                    <input type="text" class="form-control" id="shortdescription" name="shortdescription" required>
+                </div>
+                <div class="form-group">
+                    <label for="created_at">Created At</label>
+                    <input type="datetime-local" class="form-control" id="created_at" name="created_at" required>
+                </div>
+                <div class="form-group my-2">
+                    <label for="updated_at">Updated At</label>
+                    <input type="datetime-local" class="form-control" id="updated_at" name="updated_at" required>
+                </div>
+
+                <div class="form-group">
+                    <select class="form-select" aria-label="Default select example" name="category" style="border: 2px solid rgba(128, 128, 128, 0.448); margin-bottom:10px;">
+                        <option selected>Category</option>
+                            {% for category in categories %}
+                            <option value="{{category.id}}">{{category.name}}</option>
+                            {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <select class="form-select" aria-label="Default select example" name="brands" style="border: 2px solid rgba(128, 128, 128, 0.448); margin-bottom:10px;">
+                        <option selected>Select Brand</option>
+                            {% for brand in brands %}
+                            <option value="{{brand.id}}">{{brand.name}}</option>
+                            {% endfor %}
+                    </select>
+                </div>
+
+                
+
+                {% comment %} Add  variants area {% endcomment %}
+                
+                
+                <div class="form-group">
+                    <select class="form-select" aria-label="Default select example" name="color" style="border: 2px solid rgba(128, 128, 128, 0.448); margin-bottom:10px;">
+                        <option selected>Color Variant</option>
+                            {% for clr in color %}
+                            <option value="{{clr.id}}">{{clr.color}}</option>
+                            {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="prices">Sale Price</label>
+                    <input type="number" class="form-control" id="prices" name="prices" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="store_prices">Store Price</label>
+                    <input type="number" class="form-control" id="store_prices" name="store_prices" required>
+                </div>
+               
+                <div class="form-group my-2">
+                    <label for="stockes">Stock</label>
+                    <input type="number" class="form-control" id="stockes" name="stockes" required>
+                </div>
+                
+            </div>
+            <div class="form-group">
+                <label for="images">Variant Images</label>
+                <input type="file" class="form-control-file" id="images" onchange="previewImages(event, 'preview')" name="images" multiple required>
+
+            </div>
+            
+            <div id="preview"></div>
+
+        </div>
+        <button type="submit" class="btn btn-primary">SUBMIT</button>
+    </form>
+</div>
+
+
+<script>
+
+    function previewImages(event, previewId) {
+        var input = event.target;
+        var previewElement = document.getElementById(previewId);
+        previewElement.innerHTML = ''; // Clear any previous previews
+        
+        if (input.files && input.files.length > 0) {
+            for (var i = 0; i < input.files.length; i++) {
+                var reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    var img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.display = 'inline-block'; // Display images in a row
+                    img.style.maxWidth = '150px'; // Set the maximum width of each image
+                    img.style.marginTop = '10px';
+                    previewElement.appendChild(img);
+                };
+                
+                reader.readAsDataURL(input.files[i]);
+            }
+        }
+    }
+</script>
+
+
+{% endblock %}
+
+

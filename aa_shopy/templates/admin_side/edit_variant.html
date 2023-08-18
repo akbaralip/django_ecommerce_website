@@ -1,0 +1,99 @@
+{% extends 'admin_side/base.html' %}
+{% load static %}
+
+{% block body %}
+
+<h6>EDIT VARIANT</h6>
+
+<div class="container">
+    
+    <form method="post" enctype="multipart/form-data" >
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="name">Model Name</label>
+                    <input type="text" class="form-control" id="model_name" name="model_name" value="{{product_variant.model_name}}" required>
+                </div>
+            
+                <select class="form-select my-2" aria-label="Default select example" name="color" style="border: 2px solid rgba(128, 128, 128, 0.448); margin-bottom:10px;">
+                    <option selected>Color</option>
+                    {% for color in colors %}
+                        <option value="{{ color.id }}" {% if color.id == product_variant.color.id %}selected{% endif %}>
+                            {{ color.color }}
+                        </option>
+                    {% endfor %}
+                </select>
+
+                <div class="form-group">
+                    <label for="shortdescription">Store Price</label>
+                    <input type="text" class="form-control" id="store_price" name="store_price" value="{{product_variant.store_price}}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="shortdescription">Sale Price</label>
+                    <input type="text" class="form-control" id="sale_price" name="sale_price" value="{{product_variant.sale_price}}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="shortdescription">Discount Percentage</label>
+                    <input type="text" class="form-control" id="discount_percentage" name="discount_percentage" value="{{product_variant.discount_percentage}}" >
+                </div>
+                <div class="form-group">
+                    <label for="shortdescription">Stock</label>
+                    <input type="text" class="form-control" id="stock" name="stock" value="{{product_variant.stock}}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="images" class="form-label">Images</label>
+                    <input type="file" class="form-control" id="images" name="images" multiple>
+                </div>
+                <div class="mb-3">
+                    <label for="existing_images" class="form-label">Existing Images</label>
+                    <div class="d-flex" id="existing-images-container">
+                        {% for image in images %}
+                            <div class="me-2">
+                                <img src="{{ image.image.url }}" alt="Variant Image" width="100" height="100">
+                            </div>
+                        {% empty %}
+                            <p>No existing images</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            <button type="submit" class="btn btn-primary">SUBMIT</button>
+    </form>
+
+    <script>
+        // Image preview functionality
+        function previewImages(input) {
+            var container = document.getElementById('existing-images-container');
+            container.innerHTML = '';
+    
+            if (input.files && input.files.length > 0) {
+                for (var i = 0; i < input.files.length; i++) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        var image = document.createElement('img');
+                        image.src = e.target.result;
+                        image.alt = 'Variant Image';
+                        image.width = 100;
+                        image.height = 100;
+                        container.appendChild(image);
+                    };
+                    reader.readAsDataURL(input.files[i]);
+                }
+            }
+        }
+    
+        // Add event listener to the file input
+        var fileInput = document.getElementById('images');
+        fileInput.addEventListener('change', function() {
+            previewImages(this);
+        });
+    </script>
+
+</div>
+
+
+{% endblock %}

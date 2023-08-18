@@ -1,0 +1,36 @@
+{% extends 'admin_side/base.html' %}
+{% load static %}
+
+{% block body %}
+
+<div class="col-sm-12">
+    <div class="bg-white rounded h-100 p-4">
+        <h6 class="mb-4">Brand List</h6>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">Brand</th>
+                    
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                {% for brand in brands %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ brand.name }}</td>
+                    
+                    <td>
+                        <a href="{% url 'admin_brand_edit' brand.id %}" class="btn btn-outline-primary m-1">EDIT</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

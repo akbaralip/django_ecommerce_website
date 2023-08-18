@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+<div class="d-flex justify-content-center align-items-center py-5 h-100 mt-5" style="height: 100vh;">
+    <div class="border rounded-2xl border-gray-400 p-4" style="border-radius: 24px; max-width: 100%; width: 470px;">
+        {% for msg in messages %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ msg }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+        
+        <form class="d-flex flex-column align-items-center" id="reset-password-form" action="{% url 'send_otp_sms' %}" method="post">
+            {% csrf_token %}
+            
+            <div class="form-outline mb-4">
+                <input type="text" id="form2Example18" class="form-control form-control-lg" placeholder="Mobile Number" name="phone_number" style="background-color:#F5F7FA;">
+            </div>
+          
+            <!-- Submit button -->
+            <button type="submit" style="border-radius: 35px;width:200px;background-color: black;color: bisque;height: 46px;">Submit</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

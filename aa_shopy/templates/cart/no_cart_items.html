@@ -1,0 +1,71 @@
+{% extends 'base.html'%}
+{% load static%}
+
+
+{% block body %}
+<style>
+    .empty-box {
+        background-color: #f7f7f7;
+        border: 2px solid #ccc;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .empty__big-text {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+    
+    .empty__text-1 {
+        font-size: 18px;
+        color: #555;
+        margin-bottom: 10px;
+    }
+    
+    .empty__text-2 {
+        font-size: 16px;
+        color: #777;
+        margin-bottom: 20px;
+    }
+    
+    .empty__redirect-link {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: background-color 0.3s;
+    }
+    
+    .empty__redirect-link:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<body>
+    <br>
+    <div class="section__content">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 u-s-m-b-30">
+                    <div class="empty-box">
+                        <div class="empty">
+                            <div class="empty__wrap">
+                                <span class="empty__big-text">🛍️ EMPTY 🛍️</span>
+                                <span class="empty__text-1">Oops! Your wishlist is empty.</span>
+                                <p class="empty__text-2">Start adding items to your wishlist to see them here.</p>
+                                <a class="empty__redirect-link btn--e-brand" href="{% url 'home' %}">CONTINUE SHOPPING</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<br>
+{% endblock %}

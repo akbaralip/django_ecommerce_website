@@ -1,0 +1,71 @@
+{% extends 'admin_side/base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="col-sm-12">
+    <div class="bg-white rounded h-100 p-4">
+        <h6 class="mb-4">Product's List</h6>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Image</th>
+                    <th scope="col">Id</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Active</th>
+                    <th scope="col">Brand</th>
+                    <th scope="col">Actions</th>
+                    <th scope="col">EDIT</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                {% if product.productvariant_set.all %}
+                    {% with random_variant=product.productvariant_set.all|random %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>{{ product.name }}</td>
+                            <td>
+                                {% if random_variant %}
+                                    <img src="{{ random_variant.images.first.image.url }}" alt="" width="30" height="40">
+                                {% else %}
+                                    No image available
+                                {% endif %}
+                            </td>
+                          
+                            <td>{{ product.id }}</td>
+                            <td>{{ product.category }}</td>
+                            <td>{{ product.is_active }}</td>
+                            <td>{{ product.brand_name }}</td>
+                            <td>
+                                
+                                <a href="{% url 'product_list_view' product.id %}" class="btn btn-outline-primary m-1">View</a>
+                                
+                                {% if product.is_active %}
+                                    <a href="{% url 'disable_product' product.id %}" class="btn btn-outline-danger m-1">Disable</a>
+                                {% else %}
+                                    <a href="{% url 'enable_product' product.id %}" class="btn btn-outline-success m-1">Enable</a>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'edit_product' product.id %}" class="btn btn-outline-primary m-1">EDIT</a>
+                            </td>
+                        </tr>
+                    {% endwith %}
+
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-center">
+            {% if products.has_other_pages %}
+                <ul class="pagination">
+                    <!-- Pagination code goes here -->
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

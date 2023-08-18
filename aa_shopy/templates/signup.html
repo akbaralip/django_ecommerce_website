@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block  body%}
+
+<section class="gradient-custom">
+    <div class="container py-4 h-100">
+      <div class="row d-flex justify-content-center align-items-center">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+          <div class="card  text-black" style="border-radius: 1rem;">
+            <div class="card-body p-5 text-center">
+              {% for msg in messages %}
+              <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                  {{ msg }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+              {% endfor %}
+  
+                <h2 class="fw-bold mb-2 text-uppercase">SignUp</h2>
+                <p class="text-black-50 mb-5">Please enter your Details</p>
+  
+                <form class="mx-1 mx-md-4 form"  action="/signup/" method="POST">
+                  {% csrf_token %} 
+                  
+                  <div class="form-outline form-white mb-4">
+                    <input type="text" id="username" class="form-control form-control-lg" name="username" />
+                    <label class="form-label" for="username">User Name</label>
+                  </div>
+  
+                  <div class="form-outline form-white mb-4">
+                    <input type="email" id="email" class="form-control form-control-lg" name="email" />
+                    <label class="form-label" for="email">Email</label>
+                  </div>
+  
+                  <div class="form-outline form-white mb-4">
+                    <input type="password" id="pass1" class="form-control form-control-lg" name="pass1" />
+                    <label class="form-label" for="pass1">Password</label>
+                  </div>
+  
+                  <div class="form-outline form-white mb-4">
+                    <input type="password" id="pass2" class="form-control form-control-lg" name="pass2" />
+                    <label class="form-label" for="pass2">Confirm Password</label>
+                  </div>
+                  <div class="form-outline form-white mb-4">
+                    <input type="phone_number" id="phone_number" class="form-control form-control-lg" name="phone_number" required />
+                    <label class="form-label" for="phone_number">Phone Number</label>
+                  </div>
+  
+                  <button class="btn btn-outline-black btn-lg px-5" type="submit">SignUp</button>
+                </form>
+  
+             
+              <div>
+
+                <p class="mb-0">You have an account? <a href="{% url 'signin' %}" class="text-black-50 fw-bold">Sign In</a>
+                </p>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+
+{% endblock  %}

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+<section class="gradient-custom">
+  <div class="container py-5 px-2"> 
+      <div class="row d-flex justify-content-center align-items-center">
+          <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+              <div class="card  text-black" style="border-radius: 1rem;">
+                  <div class="card-body p-4 text-center">
+                      {% for msg in messages %}
+                      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                          {{ msg }}
+                          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                      </div>
+                      {% endfor %}
+                      <div class="mb-md-3 mt-md-2 pb-3"> 
+
+                          <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
+                          <p class="text-black-50 mb-2">Please enter your login and password!</p>
+
+                          <form action="/signin/" method="post">
+                              {% csrf_token %}
+
+                              <div class="form-outline form-black mb-2">
+                                  <input type="username" class="form-control form-control-lg" name="username" required />
+                                  <label class="form-label">Username</label>
+                              </div>
+
+                              <div class="form-outline form-black mb-2">
+                                  <input type="password" class="form-control form-control-lg" name="pass1" required />
+                                  <label class="form-label" for="pass1">Password</label>
+                              </div>
+                              <p class="small mb-2 pb-lg-1"><a class="text-black-50" href="{% url 'send_otp_sms' %}">Mobile OTP?</a></p>
+                              <p class="small mb-2 pb-lg-1"><a class="text-black-50" href="{% url 'forget_password' %}">Forgot password?</a></p>
+
+                              <button class="btn btn-outline-black btn-lg px-5" type="submit">Login</button>
+
+                          </form>
+
+                      </div>
+
+                      <div>
+                          <p class="mb-0">Don't have an account? <a href="{% url 'signup' %}" class="text-black-50 fw-bold">Sign Up</a>
+                          </p>
+                      </div>
+
+                  </div>
+
+              </div>
+          </div>
+      </div>
+  </div>
+</section>
+
+
+
+{% endblock  %}

@@ -1,0 +1,54 @@
+{% extends 'admin_side/base.html' %}
+{% load static %}
+
+{% block body %}
+
+<h6>EDIT PRODUCT</h6>
+
+<div class="container">
+    
+    <form method="post" enctype="multipart/form-data" >
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="name">Product Name</label>
+                    <input type="text" class="form-control" id="name" name="name" value="{{product.name}}" required>
+                </div>
+                <div class="form-group">
+                    <label for="shortdescription">Short description</label>
+                    <input type="text" class="form-control" id="shortdescription" name="description" value="{{product.description}}" required>
+                </div>
+
+                {% comment %} <select class="form-select my-2" aria-label="Default select example" name="genderSelect" style="border: 2px solid rgba(128, 128, 128, 0.448); margin-bottom:10px;">
+                    <option selected>Gender</option>
+                    {% for gender in gender %}
+                        <option value="{{ gender.id }}" {% if gender.id == product.gender.id %}selected{% endif %}>
+                            {{ gender.name }}
+                        </option>
+                    {% endfor %}
+                </select> {% endcomment %}
+        
+                <select class="form-select my-2" aria-label="Default select example" name="categorySelect" style="border: 2px solid rgba(128, 128, 128, 0.448); margin-bottom:10px;">
+                    <option selected>Category</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}" {% if category.id == product.category.id %}selected{% endif %}>
+                            {{ category.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+                
+                <select class="form-select" aria-label="Default select example" name="brand_name" style="border: 2px solid rgba(128, 128, 128, 0.448); margin-bottom:10px;">
+                    <option selected disabled>Brand</option>
+                    {% for brand in brand_name %}
+                        <option value="{{ brand.id }}" {% if brand.id == product.brand_name.id  %}selected{% endif %}>{{ brand.name }}</option>
+                    {% endfor %}
+                </select>
+             
+        <button type="submit" class="btn btn-primary">SUBMIT</button>
+    </form>
+</div>
+
+
+
+{% endblock %}

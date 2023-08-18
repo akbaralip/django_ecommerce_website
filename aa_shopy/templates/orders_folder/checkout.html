@@ -1,0 +1,351 @@
+{% extends 'base.html'%}
+{% load static%}
+
+
+{% block body %}
+
+<style>
+    /* Custom CSS styles */
+    .checkout-container {
+      margin-top: 50px;
+      background-color: #1e1e1e;
+      margin-bottom: 10px;
+      font-family: 'Josefin Sans', sans-serif;
+    }
+  
+    .address-card {
+      margin-bottom: 20px;
+      margin-top:20px;
+      padding: 10px;
+      height:500px;
+      background-color: #EDF1FF;
+    }
+  
+    .address-card .card-text {
+      margin-bottom: 5px;
+    }
+  
+    .address-card .btn-choose {
+      border-color: #1e1e1e;
+      background-color: white;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      transition: background-color 0.3s ease;
+    }
+  
+    .address-card .btn-choose:hover {
+      background-color: #f8f9fa;
+    }
+  
+    .order-summary {
+      border: solid #0B1C39;
+      background-color: #dee6ff;
+      padding: 10px;
+    }
+  
+    .order-summary .subtotal,
+    .order-summary .shipping-charge,
+    .order-summary .total {
+      margin-bottom: 5px;
+    }
+  
+    .order-summary span {
+      display: inline-block;
+      width: 120px;
+    }
+  
+    .order-summary button {
+      margin-top: 10px;
+    }
+    .row{
+        margin-bottom: 20px;
+    }
+    .address-card {
+      background-color: #dee6ff;
+    }
+    
+
+  </style>
+
+  
+
+    
+  <div class="bg-light py-3">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 mb-0"><a href="index.html">Home</a> <span class="mx-2 mb-0">/</span> <a href="cart.html">Cart</a> <span class="mx-2 mb-0">/</span> <strong class="text-black">Checkout</strong></div>
+      </div>
+    </div>
+  </div>
+
+  {% for msg in messages %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        {% if msg.tags == 'error' %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          {% elif msg.tags == 'success' %}
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {% else %}
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+              {% endif %}
+              {{ msg }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+
+  <div class="site-section">
+    <div class="container">
+
+      <div class="row">
+        <div class="col-md-6 mb-5 mb-md-0">
+          <h2 class="h3 mb-3 text-black">Billing Details</h2>
+          <div class="p-3 p-lg-5 border">
+
+            <div class="col-md-8">
+              
+              <div class="row">
+                {% for address in addresses %}
+          
+                <div class="col-md-4">
+                  <div style="font-weight: 300;">
+                    {% if address.is_delivery_address %}
+                    <div class="mb-3">
+                      <span class="badge bg-danger">Delivery Address</span>
+                    </div>
+                    {% else %}
+                    <div class="justify-content-between my-auto">
+                      <div class="d-flex justify-content-between">
+                        <div class="btn-group mt-auto">
+                          <p style="margin-right: 10px;">Choose this as delivery address</p>
+                          <a href="{% url 'choose_delivery_address' address.id %}"><button class="btn rounded-circle btn-choose"></button></a>
+                        </div>
+                      </div>
+                    </div>
+                    {% endif %}
+                    <p class="card-text"><strong>{{ address.first_name }} {{ address.last_name }}</strong></p>
+                    <p class="card-text"><strong>{{ address.email }}</strong></p>
+                    <p class="card-text"><strong>{{ address.phone_number }}</strong></p>
+                    <p class="card-text"><strong>{{ address.address_line_1 }}</strong></p>
+                    {% if address.address_line_2 %}
+                    <p class="card-text"><strong>{{ address.address_line_2 }}</strong></p>
+                    {% endif %}
+                    <p class="card-text"><strong>{{ address.city }}</strong></p>
+                    <p class="card-text"><strong>{{ address.state }}</strong></p>
+                    <p class="card-text"><strong>{{ address.postal_code }}</strong></p>
+                    <p class="card-text"><strong>{{ address.id }}</strong></p>
+                  </div>
+                </div>
+              
+                {% endfor %}
+              </div>
+
+              <div>
+                <a href="{% url 'add_address' %}" class="btn " style="background-color:#0B1C39;color:white; margin-bottom:10px;">Add Address</a>
+              </div>
+            </div>
+            
+
+
+          </div>
+        </div>
+
+        <div class="col-md-6">
+     
+          <div class="row mb-5">
+            <div class="col-md-12">
+              <h2 class="h3 mb-3 text-black">Your Order</h2>
+              <div class="p-3 p-lg-5 border">
+                <table class="table site-block-order-table mb-5">
+                  <thead>
+                    <th>Product</th>
+                    <th>Total</th>
+                  </thead>
+                  <tbody>
+                  
+                    <tr>
+                      <td class="text-black font-weight-bold"><strong>Cart Subtotal</strong></td>
+                      <td class="text-black">₹ {{ subtotal }}</td>
+                    </tr>
+                    <tr>
+                      <td class="text-black font-weight-bold"><strong>Discount</strong></td>
+                      <td class="text-black ">₹{{ discount_amount }}</td>
+                    </tr>
+                    <tr>
+                      <td class="text-black font-weight-bold"><strong>Coupon</strong></td>
+                      <td class="text-black">₹ {{ cart.coupon.discount }}</td>
+                    </tr>
+                    <tr>
+                      <td class="text-black font-weight-bold"><strong>Shipping</strong></td>
+                      {% if subtotal >= 1000 %}
+                      <td class="text-black ">Free</td>
+                      
+                      {% else %}
+                      <td class="text-black font-weight-bold">₹ 50</td>
+                      {% endif %}
+                      
+                    </tr>
+                    <tr>
+                      <td class="text-black font-weight-bold"><strong>Total</strong></td>
+                      <td class="text-black ">₹{{ total_price }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+            
+
+                <div class="border p-3 mb-3">
+                  <h3 class="h6 mb-0">Cash on Delivery</h3>
+                  <input type="radio" name="paymentOption" id="cod" value="cod">
+                </div>
+
+                <div class="border p-3 mb-5">
+                  <h3 class="h6 mb-0">UPI</h3>
+                  <input type="radio" name="paymentOption" id="upi" value="upi" checked>
+                </div>
+                {% if user_wallet.balance >= total_price %}
+                <div class="border p-3 mb-3">
+                <h3 class="h6 mb-0">Wallet Pay</h3>
+                <input type="radio" name="paymentOption" id="wallet" value="wallet">
+                </div>
+                {% endif %}
+                <div class="form-group">
+                  <button class="btn btn-block" id="proceedBtn" style="background-color:#0B1C39; color:white;">Proceed to Payment</button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <!-- </form> -->
+    </div>
+  </div>
+
+ 
+
+  
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  
+  <script>
+
+
+      function initiateRazorpayPayment(){
+        
+      // Make an AJAX POST request to initiate the payment
+      $.ajax({
+          type: "POST",
+          url: "/initiate_payment/",  // Replace with the actual URL of your Django view
+          headers: { "X-CSRFToken": "{{ csrf_token }}" }, // Add this line to include the CSRF token
+          dataType: 'json',  // Expect JSON response from the server
+          success: function(response) {
+              // Update the options with the received data from the server
+              var options = {
+                  "key": response.key,
+                  "amount": response.amount,
+                  "currency": response.currency,
+                  "name": "AA-Shopy",
+                  "description": "Thank you for purchasing from us",
+                  "image": "{%static 'user/img/logo1.png'%}",
+                  "order_id": response.order_id,                 
+                  "handler": function (response) {
+                      //alert(response.razorpay_payment_id);
+                      //alert(response.razorpay_order_id);
+                      //alert(response.razorpay_signature);
+                
+                      var paymentId = response.razorpay_payment_id;
+                      var orderId = response.razorpay_order_id;
+                      var signature = response.razorpay_signature;
+
+                      $.ajax({
+                          type: "POST",
+                          url: '/online_payment_order/{{ selected_address.id }}',
+                          headers: { "X-CSRFToken": "{{ csrf_token }}" },
+                          data: {
+                              payment_id: paymentId,
+                              orderId: orderId,
+                              signature: signature
+                          },
+                          success: function(response) {
+                              var id = response.orderId
+                              console.log("Order ID:", id);
+                              window.location.href ="{% url 'order_success' %}";
+                                                      
+                              console.log("Order placed successfully!");
+                          },
+                          error: function(xhr, status, error) {
+                              // Handle the error if any
+                              console.log(xhr.responseText);
+                              alert("Error placing the order. Please try again.");
+                          }
+                      });
+                
+                      
+                  },
+                  "prefill": {
+                      "name": "Gaurav Kumar",
+                      "email": "gaurav.kumar@example.com",
+                      "contact": "9000090000"
+                  },
+                  "notes": {
+                      "address": "Razorpay Corporate Office"
+                  },
+                  "theme": {
+                      "color": "#3399cc"
+                  }
+              };
+
+              // Create a new instance of Razorpay with updated options
+              var rzp1 = new Razorpay(options);
+
+              // Handle the payment response
+              rzp1.on('payment.failed', function(response) {
+                  alert(response.error.code);
+                  alert(response.error.description);
+                  alert(response.error.source);
+                  alert(response.error.step);
+                  alert(response.error.reason);
+                  alert(response.error.metadata.order_id);
+                  alert(response.error.metadata.payment_id);
+              });
+
+              // Open the Razorpay payment popup
+              rzp1.open();
+          },
+          error: function(xhr, status, error) {
+              // Handle the error if any
+              console.log(xhr.responseText);
+              alert("Error initiating payment. Please try again.");
+          }
+      });
+
+      e.preventDefault();
+  };
+  document.getElementById("proceedBtn").addEventListener("click", function () {
+      var paymentOption = document.querySelector('input[name="paymentOption"]:checked').value;
+
+    
+      if (paymentOption === "cod") {
+        // Code for Cash on Delivery
+        window.location.href = "{% url 'place_order' selected_address.id %}";
+        console.log("Cash on Delivery selected");
+      } else if (paymentOption === "upi") {
+        // Code for Razorpay
+        initiateRazorpayPayment();
+        console.log("Pay Using Razorpay selected");
+      } else if (paymentOption === "wallet") {
+        // Code for Pay Using Wallet\
+        alert("Your Paying using wallet");
+        window.location.href = "{% url 'wallet_place_order' selected_address.id %}";
+        console.log("Pay Using Wallet selected");
+      }
+    });
+  </script>
+
+{% endblock %}

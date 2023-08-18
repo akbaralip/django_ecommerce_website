@@ -1,0 +1,72 @@
+{% extends 'admin_side/base.html' %}
+{% load static %}
+
+{% block body %}
+
+<h6>EDIT CATEGORY</h6>
+
+
+<div class="container">
+    
+    <form method="post" enctype="multipart/form-data" >
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    
+                    <label for="name">Category Name</label>
+                    <input type="text" class="form-control" id="category_name" name="category_name" value="{{category.name}}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="images" class="form-label">Images</label>
+                    <input type="file" class="form-control" id="images" name="images" multiple>
+                </div>
+
+                <div class="mb-3">
+                    <label for="existing_images" class="form-label">Existing Images</label>
+                    <div class="d-flex" id="existing-images-container">
+                            <div class="me-2">
+                                <img src="{{ category.image.url }}" alt="Variant Image" width="100" height="100">
+                            </div>
+                    </div>
+                </div>
+             
+        <button type="submit" class="btn btn-primary">SUBMIT</button>
+    </form>
+
+    
+    <script>
+        // Image preview functionality
+        function previewImages(input) {
+            var container = document.getElementById('existing-images-container');
+            container.innerHTML = '';
+    
+            if (input.files && input.files.length > 0) {
+                for (var i = 0; i < input.files.length; i++) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        var image = document.createElement('img');
+                        image.src = e.target.result;
+                        image.alt = 'Variant Image';
+                        image.width = 100;
+                        image.height = 100;
+                        container.appendChild(image);
+                    };
+                    reader.readAsDataURL(input.files[i]);
+                }
+            }
+        }
+    
+        // Add event listener to the file input
+        var fileInput = document.getElementById('images');
+        fileInput.addEventListener('change', function() {
+            previewImages(this);
+        });
+    </script>
+
+</div>
+
+
+
+{% endblock %}

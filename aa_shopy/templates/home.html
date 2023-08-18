@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+
+  <style>
+    .category-name a {
+      text-decoration: none;
+      color: black;
+    }
+    .category-name a:hover {
+      color: #ee4266; 
+    }
+
+  </style>
+
+  {% for msg in messages %}
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    {{ msg }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endfor %}
+  
+
+
+    {% comment %} banner image * {% endcomment %}
+  <div class="site-blocks-cover" data-aos="fade">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 ml-auto order-md-2 align-self-start">
+          <div class="site-block-cover-content">
+          <h2 class="sub-title">#New Summer Collection 2019</h2>
+          <h1>Arrivals Sales</h1>
+          <p><a href="#" class="btn btn-black rounded-0">Shop Now</a></p>
+          </div>
+        </div>
+
+        <div class="col-md-6 order-1 align-self-end">
+          <div id="bannerCarousel" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+              {% for banner in banners %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                  <img src="{{ banner.image.url }}" alt="Banner Image" class="d-block w-100 img-fluid">
+                </div>
+              {% endfor %}
+            </div>
+            <a class="carousel-control-prev" href="#bannerCarousel" role="button" data-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#bannerCarousel" role="button" data-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="sr-only">Next</span>
+            </a>
+          </div>
+        </div>
+        
+      </div>
+        
+        
+          
+    </div>
+  </div>
+
+    <!-- =========category=========== -->
+
+    <div class="site-section">
+      <div class="container">
+        <div class="title-section mb-5">
+          <h2 class="text-uppercase"><span class="d-block">Discover</span> The Collections</h2>
+        </div>
+      </div>
+    </div>
+
+
+ 
+
+
+
+
+  <div class="container mt-5">
+    <h2 class="text-center mb-4" style="color:#858585; margin-top: -80px;">CATEGORIES</h2> 
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+      {% for category in categories %}
+      <div class="col mb-4">
+        <div class="category-box p-4 border rounded">
+          <div class="category-card">
+            <a href="{% url 'category' slug=category.slug %}">
+              <img src="{{ category.image.url }}" alt="{{ category.image.url }}" class="img-fluid category-image">
+            </a>
+            <div class="category-name"> 
+              <h2><a href="{% url 'category' slug=category.slug %}">{{ category.name }}</a></h2>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %} 
+    </div>
+  </div>
+
+
+
+
+
+  <!-- =========All Product=========== -->
+
+
+  <div class="container mt-5">
+    <h2 class="text-center  mb-5" style="">ALL PRODUCTS</h2>
+    <hr>
+    <div class="container mt-5">
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+        {% for product in products %}
+        {% if product.productvariant_set.all %}
+          {% with variant=product.productvariant_set.all|random %}
+          
+            
+              <div class="col mb-4">
+                <div class="card h-100">
+                  
+                  <a href="{% url 'productdetail' slug=variant.slug %}"> 
+                  <img src="{{ variant.images.first.image.url }}" alt="{{ product.name }}" class="card-img-top product-image">  
+                </a>
+
+                  <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <div class="card-body">
+                      {% if variant.discount_price is none %}
+                      <p class="card-text">Price: {{ variant.sale_price }}</p>
+                      {% else %}
+                      <p class="card-text">₹{{variant.discount_price}} <del>₹{{ variant.sale_price }}</del><h5 class="text" style="font-size: medium; color: forestgreen;">{{variant.discount}}% off</h5></p>
+                      <p class="card-text">  </p> 
+                      {% endif %}
+                  </div>
+                  </div>
+                </div>
+              </div>
+          
+          {% endwith %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    
+    <nav aria-label="Category pagination">
+      <ul class="pagination justify-content-center">
+      {% if products.has_previous %}
+      <li class="page-item">
+          <a class="page-link" href="?page={{ products.previous_page_number }}">Previous</a>
+      </li>
+      {% endif %}
+      
+      {% for num in products.paginator.page_range %}
+      <li class="page-item {% if num == products.number %}active{% endif %}">
+          <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+      </li>
+      {% endfor %}
+      
+      {% if products.has_next %}
+      <li class="page-item">
+          <a class="page-link" href="?page={{ products.next_page_number }}">Next</a>
+      </li>
+      {% endif %}
+      </ul>
+  </nav>
+  </div>
+
+
+{% endblock %}

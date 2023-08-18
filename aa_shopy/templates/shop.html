@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-3 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Filter Options</h5>
+                    <hr>
+                    <!-- Button to toggle filter options on mobile -->
+                    <button class="btn btn-primary d-md-none" type="button" data-toggle="collapse" data-target="#filterOptions" aria-expanded="false" aria-controls="filterOptions">
+                        Show Filters
+                    </button>
+                    <div id="filterOptions" class="collapse show d-md-block">
+                        <form id="filterForm">
+                            <div class="form-group">
+                                <label for="categoryFilter">Category:</label>
+                                <select class="form-control" name="categoryFilter">
+                                    <option value="all">All</option>
+                                    {% for category in categories %}
+                                    <option value="{{ category.id }}">{{ category }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        
+                            <div class="form-group">
+                                <label for="brandFilter">Brands:</label>
+                                <select class="form-control" name="brandFilter">
+                                    <option value="all">All</option>
+                                    {% for brand in brands %}
+                                    <option value="{{ brand.id }}">{{ brand }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        
+                            <div class="form-group">
+                                <label for="priceFilter">Price:</label>
+                                <select class="form-control" name="priceFilter">
+                                    <option value="all">All</option>
+                                    <option value="under50">Under 5000</option>
+                                    <option value="50to100">5000 to 30000</option>
+                                    <option value="100to200">30000 to 50000</option>
+                                    <!-- Add more price range options as needed -->
+                                </select>
+                            </div>
+                        
+                            <br>
+                            <button type="submit" class="btn btn-primary">Apply Filters</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <!-- All Products div -->
+            <h2 class="text-center mb-5" style="color: #858585;">All Products</h2>
+            <hr>
+            <div class="container mt-5">
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3">
+                    {% for product in products %}
+                    {% if product.productvariant_set.all %}
+                        {% with variant=product.productvariant_set.all|random %}
+                            <div class="col mb-4">
+                                <div class="card h-100">
+                                    <a href="{% url 'productdetail' slug=variant.slug %}">
+                                        <img src="{{ variant.images.first.image.url }}" alt="{{ product.name }}" class="card-img-top product-image">
+                                    </a>
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ product.name }}</h5>
+                                        {% if variant.discount_price is none %}
+                                        <h5 class="font-weight-semi-bold mb-4">MRP: ₹{{ variant.sale_price }}</h5>
+                                        {% else %}
+                                        <p class="card-text">₹{{variant.discount_price}} <del>₹{{ variant.sale_price }}</del><h5 class="text" style="font-size: medium; color: forestgreen;">{{variant.discount}}% off</h5></p>
+                                        <p class="card-text">  </p> 
+                                        {% endif %}
+
+                                    </div>
+                                </div>
+                            </div>
+                        {% endwith %}
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <nav aria-label="Category pagination">
+                <ul class="pagination justify-content-center">
+                {% if products.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ products.previous_page_number }}">Previous</a>
+                </li>
+                {% endif %}
+                
+                {% for num in products.paginator.page_range %}
+                <li class="page-item {% if num == products.number %}active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+                {% endfor %}
+                
+                {% if products.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ products.next_page_number }}">Next</a>
+                </li>
+                {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'path/to/jquery.js' %}"></script> <!-- Include jQuery or use a CDN -->
+<script src="{% static 'path/to/filter.js' %}"></script> <!-- Your custom filter script -->
+<script>
+$(document).ready(function() {
+    $("#filterForm").submit(function(event) {
+        event.preventDefault(); // Prevent the default form submission behavior
+
+        // Serialize the form data
+        var formData = $(this).serialize();
+
+        // Send an AJAX request to the server
+        $.ajax({
+            type: "GET", // Use POST if you prefer
+            url: "{% url 'shop_view' %}", // Replace 'filter_products' with your view name for handling filters
+            data: formData,
+            success: function(response) {
+                // Upon successful response, update the container with the filtered results
+                $("#filteredResultsContainer").html(response);
+            },
+            error: function(error) {
+                console.error("Error fetching filtered results:", error);
+            }
+        });
+    });
+});
+</script>
+
+{% endblock %}

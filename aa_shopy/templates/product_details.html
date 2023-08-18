@@ -1,0 +1,275 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+
+
+  <style>
+      
+      
+        
+        .testr a {
+          text-decoration: none;
+        }
+
+        
+
+      /* ZOOM & CROP - PRODUCT IMAGE */
+            #zoomed-image-container {
+                position: absolute;
+                top: 0;
+                right:50;
+                left:50;
+                width: 250px; /* Adjust the width of the zoomed image container */
+                height: 250px; /* Adjust the height of the zoomed image container */
+                overflow: hidden;
+                opacity: 0; /* Hide the zoomed image container by default */
+                transition: opacity 0.3s;
+                z-index: 1; /* Set a high z-index value to bring the container above all other elements */
+              }
+              
+              #product-carousel:hover + #zoomed-image-container {
+                opacity: 1;
+              }
+              
+              #zoomed-image {
+                width: 100%; /* Adjust the width of the zoomed image */
+                height: auto;
+                transform: scale(3);
+                transition: transform 0.3s;
+              }
+              
+                
+        
+       
+      
+      
+  </style>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+
+<!-- Shop Detail Start -->
+
+
+  <section style="padding-top: 20px;">
+        {% for msg in messages %}
+          <div class="container">
+              <div class="row">
+                  <div class="col-md-12">
+                       {% if msg.tags == 'error' %}
+                          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {% else %}
+                          <div class="alert alert-info alert-dismissible fade show" role="alert">
+                        {% endif %}
+                          {{ msg }}
+                          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          {% endfor %}
+  
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 imgBox" style="width: 400px; height: 400px;">
+          <!-- Product Image Carousel -->
+          <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+            <!-- Carousel Indicators -->
+            <ol class="carousel-indicators">
+              {% for image in selected_variant.images.all %}
+                <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></li>
+              {% endfor %}
+            </ol>
+            <!-- Carousel Images -->
+            <div class="carousel-inner">
+              {% for image in selected_variant.images.all %}
+                <div class="carousel-item  {% if forloop.first %}active{% endif %}">
+                  <img src="{{ image.image.url }}" alt="Product Image" class="d-block w-100" style="height:25rem" onmousemove="zoomImage(event, this)" onmouseleave="resetZoomedImage()">
+                </div>
+              {% endfor %}
+            </div>
+            <div id="zoomed-image-container">
+              <img id="zoomed-image" src="" >              
+            </div>
+            
+            
+            <!-- Carousel Controls -->
+            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </a>
+          </div>
+        </div>
+        
+        
+
+
+        <div class="col-md-6">
+          <!-- Product Details -->
+
+          <div class="product-details" style="color:black;font-family:'Josefin Sans', sans-serif;">
+            <h2 style="color:black;font-family:'Josefin Sans', sans-serif;">{{ selected_variant.product.name }} - {{ selected_variant.color.color }}</h2>
+            <p>{{ selected_variant.product.description }}</p>
+            <div class="color-variants">
+              
+              <p style="color:black;font-family:'Josefin Sans', sans-serif;">Choose Color:{{selected_variant.color.color }}</p>
+              {% if selected_variant.discount_price is none %}
+              <h5 class="font-weight-semi-bold mb-4">MRP: ₹{{ product_variant.sale_price }}</h5>
+              {% else %}
+              <p class="card-text">₹{{selected_variant.discount_price}} <del>₹{{ selected_variant.sale_price }}</del><h5 class="text" style="font-size: medium; color: forestgreen;">{{selected_variant.discount}}% off</h5></p>
+                    <p class="card-text">  </p> 
+              {% endif %}
+              <div class="d-flex align-items-center">
+                
+
+                {% if product_variant.stock <= 0  %}
+                  <p class=" px-3" style="background-color: red; margin-left: 10px;">
+                    <i class="mr-1"></i> Sorry, out of stock
+                  </p>
+                {% elif product_variant.stock <= 5 %}
+                  <p class=" px-3" style="background-color: yellwo; margin-left: 10px;">
+                    <i class="mr-1"></i> Stock: ({{ product_variant.stock }}) - Book Fast!
+                  </p>
+                {% else %}
+                  <p class=" px-0" style="background-color:; margin-left: 4px;">
+                    <i class="mr-1"></i> Available Stock: ({{ product_variant.stock }})
+                  </p>
+                {% endif %}
+              </div>
+              
+
+          <br>
+            <form method="post" action="{% url 'productdetail' slug=selected_variant.slug %}">
+              {% csrf_token %}
+              <p class="text-white font-weight-medium mb-1 mr-3">Colors:</p>
+              <div class="d-flex ">
+              {% for variant in product.productvariant_set.all %}
+                  {% if variant.is_active %}
+                      <div class=" mx-1">
+                          <button type="submit" class="color-variant rounded-circle" style="background-color: {{ variant.color.color }}; width: 20px; height: 20px;" name="variant_id" value="{{ variant.id }}"></button>
+                      </div>
+                  {% endif %}
+              {% endfor %}
+              </div>
+            </form>
+            <br>
+        
+            <div class="d-flex align-items-center">
+                <a href="{% url 'add_to_cart' selected_variant.id %}">
+                  <button class="btn  px-3 " style="margin-right: 10px;
+                    color: #fff;
+                    background-color: #ee4266;
+                    border-color: #ee4266;">
+                    <i class="fa fa-shopping-cart mr-1"></i> Add to cart
+                  </button>
+
+                </a>
+                <div class="testr">
+                  <a href="{% url 'add_to_wishlist' selected_variant.id %}">
+                    <i class="icon-heart-o fa-2x"></i>
+                  </a>
+                </div>
+                
+              </div>
+      
+            </div>
+
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <br>
+
+  <section style=" padding-top: 20px; margin-bottom: 50px;color:white;font-family:'Josefin Sans', sans-serif;">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <!-- Specification & Review Box -->
+          <div class="specification-review-box">
+            <!-- Specification & Review Buttons -->
+            <div class="button-group">
+              <button class="btn active" id="specification-btn">Specification</button>
+              <button class="btn" id="review-btn">Review</button>
+            </div>
+            <!-- Specification & Review Content -->
+            <div style="color:black;" class="content-box" id="specification-content">
+              <h3  >Specification</h3>
+              <ul>
+                <li>Model Number: {{ selected_variant.model_name }}</li>
+                <li>Waterproof: {% if selected_variant.water_proof %}Yes{% else %}No{% endif %}</li>
+                <li>Touch Screen: {% if selected_variant.touch_screen %}Yes{% else %}No{% endif %}</li>
+                <li>Dial Shape: {{ selected_variant.dial_shape }}</li>
+                <li>Brand: {{ selected_variant.product.brand_name }}</li>
+              </ul>
+            </div>
+            <div class="content-box" id="review-content"  style="display: none;">
+              <h3>Reviews</h3>
+              <p>Product reviews go here...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  
+  <script>
+
+            ///////////////////////
+            // PRODUCT ZOOM & CROP
+            ///////////////////////
+            function zoomImage(event, element) {
+                var zoomedImage = document.getElementById('zoomed-image');
+                var zoomedImageContainer = document.getElementById('zoomed-image-container')
+              
+                // Calculate the position of the mouse pointer relative to the image
+                var x = event.offsetX / element.offsetWidth;
+                var y = event.offsetY / element.offsetHeight;
+              
+                // Set the zoomed image source to the clicked image source
+                zoomedImage.src = element.src;
+              
+                // Adjust the transform origin based on the mouse pointer position
+                zoomedImage.style.transformOrigin = (x * 100) + '% ' + (y * 100) + '%';
+              
+                // Apply the zoom effect by scaling the image
+                zoomedImage.style.transform = 'scale(2)'; // Adjust the zoom level as desired
+    
+                // Change z-index to 999 on mouse hover
+                zoomedImageContainer.style.zIndex = 5000;
+                zoomedImageContainer.style.opacity = 1;
+              }
+    
+              function resetZoomedImage() {
+                var zoomedImageContainer = document.getElementById('zoomed-image-container')
+                zoomedImageContainer.style.transform = 'none';
+                // Reset z-index to its initial value on mouse leave
+                zoomedImageContainer.style.zIndex = 1;
+                zoomedImageContainer.style.opacity = 0;
+            }
+              
+  </script>
+
+
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  
+  
+
+  
+
+{% endblock %}
+
+{% block script %}
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+{% endblock %}

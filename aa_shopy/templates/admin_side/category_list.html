@@ -1,0 +1,41 @@
+{% extends 'admin_side/base.html' %}
+{% load static %}
+
+{% block body %}
+
+<div class="col-sm-12">
+    <div class="bg-white rounded h-100 p-4">
+        <h6 class="mb-4">Categories List</h6>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Image</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                {% for category in categories %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ category.name }}</td>
+                    <td> <img src="{{ category.image.url }}" alt="Category Image" width="30" height="40"></td>
+                    <td>
+                        <a href="{% url 'edit_category' category.id %}" class="btn btn-outline-primary m-1">EDIT</a>
+                        {% if category.is_active %}
+                            <a href="{% url 'disable_category' category.id %}" class="btn btn-outline-danger m-1">Disable</a>
+                        {% else %}
+                            <a href="{% url 'enable_category' category.id %}" class="btn btn-outline-success m-1">Enable</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

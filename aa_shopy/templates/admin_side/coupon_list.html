@@ -1,0 +1,36 @@
+{% extends 'admin_side/base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="container">
+    <h1 class="my-4">Coupon List</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Coupon Code</th>
+                <th>Discount</th>
+                <th>Valid From</th>
+                <th>Valid To</th>
+                <th>Minimum Order Amount</th>
+                <th>Active</th>
+                <th>Single Use Per User</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for coupon in coupons %}
+            <tr>
+                <td>{{ coupon.code }}</td>
+                <td>{{ coupon.discount }}</td>
+                <td>{{ coupon.valid_from }}</td>
+                <td>{{ coupon.valid_to }}</td>
+                <td>{{ coupon.minimum_order_amount }}</td>
+                <td>{{ coupon.is_active }}</td>
+                <td>{{ coupon.single_user_per_user }}</td>
+                <td>{{ coupon.quantity }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

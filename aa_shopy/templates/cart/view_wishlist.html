@@ -3,14 +3,16 @@
 
 
 {% block body %}
-{% if messages %}
-{% for msg in messages %}
-<div class="alert alert-danger alert-dismissible fade show" role="alert">
-      {{ msg }}
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-{% endfor %}
-{% endif %}
+
+  {% for msg in messages %}
+  <div>
+      <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+      <script>
+          var r = "{{ msg }}"
+          swal("Hey", r, "success")
+      </script>
+  </div>
+  {% endfor %}
 
 
 <div class="bg-light py-3">

@@ -132,7 +132,7 @@ def edit_address(request, address_id):
         # Save the updated user address
       
         user_address.save()
-
+        messages.success(request, "Address Edited Successfully")
         return redirect('address_view')
     
     context = {

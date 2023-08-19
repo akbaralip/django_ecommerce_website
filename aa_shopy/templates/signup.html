@@ -9,12 +9,15 @@
         <div class="col-12 col-md-8 col-lg-6 col-xl-5">
           <div class="card  text-black" style="border-radius: 1rem;">
             <div class="card-body p-5 text-center">
-              {% for msg in messages %}
-              <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                  {{ msg }}
-                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-              </div>
-              {% endfor %}
+                {% for msg in messages %}
+                <div>
+                    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+                    <script>
+                        var r = "{{ msg }}"
+                        swal("Ooops !", r, "success")
+                    </script>
+                </div>
+                {% endfor %}
   
                 <h2 class="fw-bold mb-2 text-uppercase">SignUp</h2>
                 <p class="text-black-50 mb-5">Please enter your Details</p>
@@ -23,22 +26,22 @@
                   {% csrf_token %} 
                   
                   <div class="form-outline form-white mb-4">
-                    <input type="text" id="username" class="form-control form-control-lg" name="username" />
+                    <input type="text" id="username" class="form-control form-control-lg" name="username" required/>
                     <label class="form-label" for="username">User Name</label>
                   </div>
   
                   <div class="form-outline form-white mb-4">
-                    <input type="email" id="email" class="form-control form-control-lg" name="email" />
+                    <input type="email" id="email" class="form-control form-control-lg" name="email" required/>
                     <label class="form-label" for="email">Email</label>
                   </div>
   
                   <div class="form-outline form-white mb-4">
-                    <input type="password" id="pass1" class="form-control form-control-lg" name="pass1" />
+                    <input type="password" id="pass1" class="form-control form-control-lg" name="pass1" required />
                     <label class="form-label" for="pass1">Password</label>
                   </div>
   
                   <div class="form-outline form-white mb-4">
-                    <input type="password" id="pass2" class="form-control form-control-lg" name="pass2" />
+                    <input type="password" id="pass2" class="form-control form-control-lg" name="pass2" required/>
                     <label class="form-label" for="pass2">Confirm Password</label>
                   </div>
                   <div class="form-outline form-white mb-4">
@@ -62,6 +65,7 @@
       </div>
     </div>
   </section>
-  
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src={% static "js/script.js" %} ></script>
 
 {% endblock  %}

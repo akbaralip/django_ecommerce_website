@@ -8,18 +8,21 @@
           <div class="col-12 col-md-8 col-lg-6 col-xl-5">
               <div class="card  text-black" style="border-radius: 1rem;">
                   <div class="card-body p-4 text-center">
-                      {% for msg in messages %}
-                      <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                          {{ msg }}
-                          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                      </div>
-                      {% endfor %}
-                      <div class="mb-md-3 mt-md-2 pb-3"> 
+                        {% for msg in messages %}
+                        <div>
+                            <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+                            <script>
+                                var r = "{{ msg }}"
+                                swal("Hey", r, "success")
+                            </script>
+                        </div>
+                        {% endfor %}
+                        <div class="mb-md-3 mt-md-2 pb-3"> 
 
                           <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
                           <p class="text-black-50 mb-2">Please enter your login and password!</p>
 
-                          <form action="/signin/" method="post">
+                            <form action="/signin/" method="post">
                               {% csrf_token %}
 
                               <div class="form-outline form-black mb-2">
@@ -36,9 +39,9 @@
 
                               <button class="btn btn-outline-black btn-lg px-5" type="submit">Login</button>
 
-                          </form>
+                            </form>
 
-                      </div>
+                        </div>
 
                       <div>
                           <p class="mb-0">Don't have an account? <a href="{% url 'signup' %}" class="text-black-50 fw-bold">Sign Up</a>

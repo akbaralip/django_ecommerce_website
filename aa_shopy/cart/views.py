@@ -41,7 +41,7 @@ def add_to_cart(request, selected_variant_id):
         if product_variant.stock >= 1:
             # Check if the product has a discount_price and use that, otherwise use sale_price
             item_price = product_variant.discount_price if product_variant.discount_price else product_variant.sale_price
-            print(item_price)
+          
             CartItems.objects.create(cart=cart, product=product_variant, quantity=1, price=item_price)
             messages.success(request, 'Item added to cart.')
         else:
@@ -55,7 +55,7 @@ def cart(request):
         cart, created = Cart.objects.get_or_create(user=request.user)
     else:
         cart_id = request.session.get('cart_id')
-        print('guest_cart:', cart_id)
+       
         if cart_id:
             cart = Cart.objects.get(id=cart_id)
         else:
@@ -222,7 +222,7 @@ def remove_coupon(request):
 def remove_from_cart(request):
     if request.method == 'POST':
         item_id = request.POST.get('item_id')
-        print(item_id)
+   
 
         cart_item = CartItems.objects.filter(id=item_id).first()
 
@@ -243,7 +243,7 @@ def wishlist(request):
     
     categories = Category.objects.all()
     items = WishListItem.objects.filter(wishlist=wishlist)
-    print('items:',items)
+   
     
 
     context = {
@@ -281,11 +281,11 @@ def add_to_wishlist(request, selected_variant_id):
 
 
 def remove_to_wishlist(request, item_id):
-    print('hloow wishlist',item_id)
+    
     # varinat = ProductVariant.objects.get(id=item_id)
     # wishlist = WishList.objects.get(user=request.user)
     item = WishListItem.objects.get(id=item_id)
-    print(item)
+  
 
     # if item.exists():
     item.delete()

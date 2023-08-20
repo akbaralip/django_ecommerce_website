@@ -29,7 +29,6 @@ def category(request, slug):
     products = current_categories.product_set.all()  # Retrieve products based on the category
     categories = Category.objects.all()
 
-    print("Retrieve products based on the category------>", products)  # Check the products in the console
     return render(request, 'category.html', {'products': products, 'categories': categories})
 
 

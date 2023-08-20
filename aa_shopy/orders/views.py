@@ -47,11 +47,11 @@ def checkout_page(request):
     if cart and cart.coupon:
         
         coupon = get_object_or_404(Coupon, code=cart.coupon)
-        print("coupon",coupon)
+       
         min_amount = coupon.discount
-        print(min_amount)
+   
         total_prices = subtotal - min_amount
-        print(total_prices)
+  
     else:
         total_prices = subtotal
 
@@ -312,10 +312,10 @@ def online_payment_order(request, userId):
             )
 
         variant = cart_item.product
-        print('variant===>',variant)
+  
         variant.stock -= cart_item.quantity
         variant.save()
-        print('variant===>',variant)
+       
         
         orderId = order.id
         items.delete()

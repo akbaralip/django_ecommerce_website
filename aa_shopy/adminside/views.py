@@ -201,7 +201,7 @@ def disable_product(request, product_id):
 
 def product_list_view(request, product_id):
     if request.user.is_superuser:
-        print('ethiyo======>')
+       
 
         product = get_object_or_404(Product, id=product_id)
 
@@ -266,7 +266,7 @@ def add_varients(request, id):
 
 def edit_variant(request, variant_id):
     product_variant = ProductVariant.objects.get(id=variant_id)
-    print('variant====>', product_variant)
+   
 
     if request.method == "POST":
         product_variant.model_name = request.POST['model_name']
@@ -405,7 +405,7 @@ def edit_product(request, product_id):
         # product.gender = get_object_or_404(Gender, pk=gender_id)
 
         brand_id = request.POST.get('brand_name')
-        print('=====>',brand_id)
+       
         product.brand_name = get_object_or_404(Brands, pk=brand_id)
 
 
@@ -544,7 +544,7 @@ def order_shipped(request, order_id):
         order = get_object_or_404(Order, id=order_id)
         
         order.order_status = 'Shipped'
-        print(order.order_status)
+        
         order.shipping_date = timezone.now()
         order.save()
         return redirect(request.META.get('HTTP_REFERER'))
@@ -619,7 +619,7 @@ def admin_order_cancel(request, order_id):
 def order_deliverd(request, order_id):
     if request.user.is_superuser:
         order = get_object_or_404(Order, id=order_id)
-        print(order)
+        
         # Make sure the order is in the 'SHIPPED' status before marking it as 'DELIVERED'
         if order.order_status == 'Shipped':
             order.order_status = 'Delivered'
@@ -629,7 +629,7 @@ def order_deliverd(request, order_id):
         if order.payment_status=='Pending':
             order.payment_status='Paid'
         order.save()
-        print(order.return_period_expired)
+        
 
         return redirect(request.META.get('HTTP_REFERER'))
 

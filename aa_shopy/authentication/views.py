@@ -36,7 +36,7 @@ def signin(request):
          otp_store = get_random_string(length=5, allowed_chars='0123456789')
          request.session['otp'] = otp_store
          request.session['user_pk'] = user.pk
-         print('Your otp:',otp_store)
+       
 
 
          subject = "OTP Confirmations"
@@ -149,7 +149,7 @@ def otp_login(request):
         user_id = request.session.get('user_pk')
         entered_otp = request.POST['fotp']
         guest_cart_id = request.session.get('cart_id')
-        print('guest_cart_id:',guest_cart_id)
+    
 
         if stored_otp == entered_otp:
             try:
@@ -159,13 +159,12 @@ def otp_login(request):
                 if guest_cart_id:
                     try:
                         guest_cart = Cart.objects.get(id=guest_cart_id)
-                        print("guest_cart:",guest_cart)
+                      
                         user_cart, created = Cart.objects.get_or_create(user=myuser)
-                        print("user_cart:",user_cart)
-                        print('created=======>:',created)
+                      
 
                         for guest_item in guest_cart.cartitems_set.all():
-                            print('guest_item::',guest_item)
+                           
                             try:
                                 user_item = CartItems.objects.get(cart=user_cart, product=guest_item.product)
                                 available_stock = guest_item.product.stock - user_item.quantity
@@ -302,9 +301,10 @@ def signout(request):
     return redirect('signin')
 
 
-from twilio.rest import Client
+
 from django.conf import settings
 from .models import UserDetail
+from twilio.rest import Client
 
 def send_otp_sms(request):
     if request.method == 'POST':
@@ -316,7 +316,7 @@ def send_otp_sms(request):
             user = user_details.first()  
             user_id = user.user_id
             request.session['user_pk'] = user_id
-            print(user_id)
+          
             
             otp_code = get_random_string(length=5, allowed_chars='0123456789')
             request.session['otp'] = otp_code

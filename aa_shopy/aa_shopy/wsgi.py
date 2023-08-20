@@ -8,6 +8,11 @@ https://docs.djangoproject.com/en/4.2/howto/deployment/wsgi/
 """
 
 import os
+import sys
+
+# Assuming your virtual environment is located at /home/ubuntu/django_ecommerce_website/env
+venv_path = '/home/ubuntu/django_ecommerce_website/env'
+sys.path.append(venv_path)
 
 from django.core.wsgi import get_wsgi_application
 
